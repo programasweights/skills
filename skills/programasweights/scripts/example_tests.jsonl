@@ -1,7 +1,0 @@
-{"input": "my card got charged twice", "expected": "billing"}
-{"input": "the export button does nothing when I click it", "expected": "bug"}
-{"input": "please add a dark mode", "expected": "feature"}
-{"input": "how do I reset my password?", "expected": "other"}
-{"input": "I want a refund for last month", "expected": "billing"}
-{"input": "the app crashes on startup", "expected": "bug"}
-{"input": "can you support CSV export?", "expected": "feature"}

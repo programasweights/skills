@@ -42,11 +42,19 @@ Output: delete
 4. Add or fix examples / tighten the wording, recompile, re-measure.
 5. Stop when accuracy is good enough; save the program id or slug and reuse it.
 
-`scripts/paw_eval.py` in this skill runs steps 3-4: it compiles a spec, runs a
-JSONL/CSV test set, prints accuracy and the specific failures, and prints the program id.
+A minimal eval loop for steps 3-4 - compile, run the test set, print accuracy and the
+specific misses, then fix the spec and recompile:
 
-```bash
-python scripts/paw_eval.py --spec spec.txt --tests tests.jsonl
+```python
+import programasweights as paw
+
+tests = [{"input": "...", "expected": "..."}]   # your input/expected pairs
+fn = paw.compile_and_load(open("spec.txt").read())
+results = [(t, fn(t["input"]).strip()) for t in tests]
+misses = [(t, got) for t, got in results if got != t["expected"]]
+print(f"accuracy: {(len(tests) - len(misses)) / len(tests):.0%}")
+for t, got in misses:
+    print("FAIL:", t["input"], "-> got", repr(got), "want", repr(t["expected"]))
 ```
 
 More worked examples and case studies: https://programasweights.readthedocs.io

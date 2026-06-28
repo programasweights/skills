@@ -5,8 +5,6 @@ An [Agent Skill](https://agentskills.io) that teaches your AI coding agent to us
 spec into a tiny neural function that runs locally - for fuzzy text tasks like
 classification, extraction, format repair, fuzzy matching, log triage, and routing.
 
-[![skills.sh](https://skills.sh/b/programasweights/skills)](https://skills.sh/programasweights/skills)
-
 ## Install
 
 ```bash
@@ -45,11 +43,16 @@ with examples, iterate it against test cases, and reuse it locally.
 
 ```
 skills/programasweights/
-  SKILL.md          # the skill (trigger + workflow)
+  SKILL.md          # the skill (trigger + workflow); the eval loop is embedded inline
+  LICENSE.txt       # per-skill MIT license
   references/       # api, writing-good-specs, browser-sdk, troubleshooting (loaded on demand)
-  scripts/
-    paw_eval.py     # compile a spec, run a test set, report accuracy + program id
+assets/             # brand icon (paw.svg, icon-512.png)
+SECURITY.md         # exactly what the skill does + data flow
 ```
+
+The installed skill is **script-free** - Markdown instructions only, no bundled executable
+code. (The Codex/Claude plugin + marketplace manifests in this repo are packaging only and
+are not yet listed in any directory.)
 
 ## Manual install (without the CLI)
 
@@ -63,10 +66,11 @@ Copy `skills/programasweights/` into your agent's skills directory, e.g.:
 
 - **Compile** sends your spec to the hosted PAW API (`https://programasweights.com`) and
   returns a program id. Do not put secrets in a spec.
-- **Inference runs locally** through the SDK and works offline after the first download.
-- Auth is optional; the bundled `scripts/paw_eval.py` uses only the official
-  `programasweights` SDK and contacts nothing else. MIT licensed; read every file before
-  installing.
+- **Inference runs locally** through the official `programasweights` SDK and works offline
+  after the first download. No user data is sent at inference time.
+- Auth is optional (anonymous use works). MIT licensed; read every file before installing.
+- Full details, including what the skill does **not** do, are in [SECURITY.md](SECURITY.md).
+  For reproducibility, pin to a release tag or commit and re-review before upgrading.
 
 ## Links
 

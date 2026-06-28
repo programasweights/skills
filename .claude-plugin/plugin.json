@@ -1,0 +1,20 @@
+{
+  "name": "programasweights",
+  "version": "0.1.0",
+  "description": "Compile a natural-language spec into a tiny neural function that runs locally - classification, extraction, format repair, fuzzy matching, log triage, and routing.",
+  "author": {
+    "name": "ProgramAsWeights",
+    "url": "https://programasweights.com"
+  },
+  "homepage": "https://programasweights.com",
+  "repository": "https://github.com/programasweights/skills",
+  "license": "MIT",
+  "keywords": [
+    "classification",
+    "extraction",
+    "format-repair",
+    "fuzzy-matching",
+    "nlp",
+    "local-inference"
+  ]
+}

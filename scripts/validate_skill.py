@@ -17,6 +17,15 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 NAME_RE = re.compile(r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?$")
 
+# Executable / opaque binary types are the main agent-skill abuse vector (e.g. .pyc
+# bytecode poisoning, archives hiding payloads). We reject them anywhere in the repo.
+# Image assets are allowed (brand icons).
+DANGEROUS_EXTS = {
+    ".pyc", ".pyo", ".so", ".o", ".a", ".dll", ".dylib", ".exe", ".bin", ".class",
+    ".jar", ".wasm", ".zip", ".tar", ".gz", ".tgz", ".bz2", ".xz", ".7z", ".rar",
+    ".dmg", ".pkg", ".node",
+}
+
 
 def parse_frontmatter(text: str, rel: str, errors: list[str]) -> dict | None:
     """Parse the YAML frontmatter with the SAME parser the skills ecosystem uses
@@ -72,6 +81,15 @@ def check(skill_md: pathlib.Path, errors: list[str]) -> None:
             errors.append(f"{rel}: references `{ref}` which does not exist")
 
 
+def check_no_dangerous_binaries(errors: list[str]) -> None:
+    for f in ROOT.rglob("*"):
+        if ".git" in f.parts or not f.is_file():
+            continue
+        if f.suffix.lower() in DANGEROUS_EXTS:
+            errors.append(f"{f.relative_to(ROOT)}: committed executable/binary type "
+                          f"'{f.suffix}' is not allowed (trust guard)")
+
+
 def main() -> int:
     skill_files = sorted(ROOT.glob("skills/*/SKILL.md")) + sorted(ROOT.glob("skills/*/*/SKILL.md"))
     if not skill_files:
@@ -80,6 +98,7 @@ def main() -> int:
     errors: list[str] = []
     for f in skill_files:
         check(f, errors)
+    check_no_dangerous_binaries(errors)
     if errors:
         print("INVALID:")
         for e in errors:

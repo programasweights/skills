@@ -2,6 +2,9 @@
 name: programasweights
 description: Compile a natural-language spec into a tiny neural function that runs locally with ProgramAsWeights (PAW). Use it for fuzzy text-in / text-out tasks that a regex can't handle but that are too slow, costly, or overkill to send to a full LLM on every item - classify, categorize, label, or tag text (sentiment, urgency, intent, topic, spam, support tickets, ALERT vs QUIET log lines); extract fields from messy text (emails, names, dates, IDs, invoice numbers); repair or normalize formats (broken JSON, dates); fuzzy or typo-tolerant matching, near-duplicate detection, and deduplication; map a misspelled value to the closest option; semantic search; log and error triage; and intent routing. Compile once on the hosted API, then run the function locally and offline via the Python or browser/JavaScript SDK; cheaper and faster than calling a large model per item. Not for long-form generation, open-ended chat, writing code, or multi-step reasoning.
 license: MIT
+version: 0.1.0
+metadata:
+  short-description: Compile fuzzy text-in/text-out functions that run locally
 ---
 
 # ProgramAsWeights (PAW)
@@ -73,9 +76,26 @@ fn("my card got charged again")   # "billing"
 **3. Iterate with test cases - the #1 practice.** Do not accept the first result.
 Build a small set of input/expected pairs, measure accuracy, then refine the wording
 and examples and recompile until it is good enough. Treat it like software: test, debug
-the specific failures, fix the spec, retest. The helper `scripts/paw_eval.py` in this
-skill automates the loop (compile -> run a test set -> report accuracy -> print the
-program id). See `references/writing-good-specs.md`.
+the specific failures, fix the spec, retest. A minimal eval loop:
+
+```python
+import programasweights as paw
+
+tests = [
+    {"input": "I was charged twice this month", "expected": "billing"},
+    {"input": "The export button does nothing", "expected": "bug"},
+    {"input": "Please add a dark mode",          "expected": "feature"},
+]
+
+fn = paw.compile_and_load(open("spec.txt").read())
+results = [(t, fn(t["input"]).strip()) for t in tests]
+misses = [(t, got) for t, got in results if got != t["expected"]]
+print(f"accuracy: {(len(tests) - len(misses)) / len(tests):.0%}")
+for t, got in misses:        # inspect failures, then fix the spec + recompile
+    print("FAIL:", t["input"], "-> got", repr(got), "want", repr(t["expected"]))
+```
+
+See `references/writing-good-specs.md` for how to debug the misses.
 
 **4. Save the program id or slug and reuse it locally.** Inference needs no server after
 the first asset download.

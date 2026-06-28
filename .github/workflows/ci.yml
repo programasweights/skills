@@ -16,9 +16,9 @@ jobs:
           python-version: "3.12"
       - name: Install validator deps
         run: pip install pyyaml
-      - name: Validate SKILL.md frontmatter (name/description, name==dir, paths exist)
+      - name: Validate SKILL.md (frontmatter, name==dir, description<=1024, ref paths, no binaries)
         run: python scripts/validate_skill.py
       - name: Trigger coverage (heuristic, informational)
         run: python scripts/eval_trigger.py
-      - name: Python syntax check (helper script)
-        run: python -m py_compile skills/programasweights/scripts/paw_eval.py
+      - name: Skill resolves via the skills CLI
+        run: npx -y skills add . --list
