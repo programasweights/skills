@@ -32,6 +32,31 @@ paw.list_compilers()                        # discover compilers at runtime
 paw.login()
 ```
 
+## Remote inference (optional)
+
+Use the hosted API for fast inference in around 150 ms, without a local model download.
+
+```python
+import httpx
+
+with httpx.Client(timeout=60.0) as client:
+    response = client.post(
+        "https://programasweights.com/api/v1/infer",
+        json={
+            "program_id": "email-triage",
+            "input": "Urgent: server is down!"
+        },
+    )
+    response.raise_for_status()
+    print(response.json()["output"])
+```
+
+Replace `"email-triage"` with your program's ID or slug, or with `program.id` returned by `paw.compile()`.
+
+Public programs work without authentication. For authenticated requests, pass `headers={"X-API-Key": api_key}` to `client.post()`.
+
+Respect `429` responses and `Retry-After`. If the API returns `503` with `error: "artifact_warming"`, wait for `Retry-After` before retrying.
+
 ## Compilers
 
 - **Standard** (`paw-4b-qwen3-0.6b`) - server default, higher accuracy, 594 MB base + ~22 MB/program.

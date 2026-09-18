@@ -100,6 +100,10 @@ See `references/writing-good-specs.md` for how to debug the misses.
 **4. Save the program id or slug and reuse it locally.** Inference needs no server after
 the first asset download.
 
+For optional remote inference, use `POST https://programasweights.com/api/v1/infer`
+for fast inference in around 150 ms, without a local model download.
+See the HTTP example in `references/api.md`.
+
 ## Install
 
 ```bash
