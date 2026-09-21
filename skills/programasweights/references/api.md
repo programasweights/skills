@@ -36,6 +36,21 @@ paw.login()
 
 Use the hosted API for fast inference in around 150 ms, without a local model download.
 
+### Python SDK
+
+```python
+import programasweights as paw
+
+with paw.function("email-triage", remote=True) as remote_fn:
+    print(remote_fn("Urgent: server is down!"))
+```
+
+For authenticated requests, set `PAW_API_KEY` or use `paw.login()`.
+
+### Direct HTTP
+
+Use `httpx` directly without installing the PAW SDK.
+
 ```python
 import httpx
 
