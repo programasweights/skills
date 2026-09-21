@@ -40,24 +40,27 @@ that, after compiling, runs in roughly 0.05-0.5s locally with no network.
 
 ## How to use it (the workflow)
 
-**1. Check the Hub first.** Someone may have already published a function; try a slug
-before compiling:
+**1. Compile your own function.** Describe the behavior you need:
 
 ```python
 import programasweights as paw
 
-fn = paw.function("email-triage")   # downloads once, then runs locally
+program = paw.compile(
+    "Classify if a message needs immediate attention or can wait. "
+    "Return only 'immediate' or 'wait'."
+)
+fn = paw.function(program.id)
 fn("Urgent: server is down!")        # "immediate"
 fn("Newsletter: spring picnic")      # "wait"
 ```
 
-**2. Otherwise compile your own.** A good spec is a description PLUS a few
+**2. Include examples in your spec.** A good spec is a description PLUS a few
 `Input: ... Output: ...` examples and an explicit output constraint:
 
 ```python
 import programasweights as paw
 
-fn = paw.compile_and_load("""
+program = paw.compile("""
 Classify support tickets. Return ONLY one of: billing, bug, feature, other.
 
 Input: I was charged twice this month
@@ -69,6 +72,7 @@ Output: bug
 Input: Please add a dark mode
 Output: feature
 """)
+fn = paw.function(program.id)
 
 fn("my card got charged again")   # "billing"
 ```
@@ -87,7 +91,8 @@ tests = [
     {"input": "Please add a dark mode",          "expected": "feature"},
 ]
 
-fn = paw.compile_and_load(open("spec.txt").read())
+program = paw.compile(open("spec.txt").read())
+fn = paw.function(program.id)
 results = [(t, fn(t["input"]).strip()) for t in tests]
 misses = [(t, got) for t, got in results if got != t["expected"]]
 print(f"accuracy: {(len(tests) - len(misses)) / len(tests):.0%}")
@@ -99,6 +104,21 @@ See `references/writing-good-specs.md` for how to debug the misses.
 
 **4. Save the program id or slug and reuse it locally.** Inference needs no server after
 the first asset download.
+
+```python
+print(program.id)  # Save the tested program's ID
+```
+
+On future runs, load that ID:
+
+```python
+import programasweights as paw
+
+saved_program_id = "PASTE_YOUR_PROGRAM_ID_HERE"
+fn = paw.function(saved_program_id)
+```
+
+Compile outside request handlers and reuse the loaded function across calls.
 
 For optional remote inference, use `paw.function(..., remote=True)` or the hosted
 HTTP API for fast inference in around 150 ms, without a local model download.
