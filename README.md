@@ -109,7 +109,3 @@ NeurIPS 2026 · [Preprint](https://arxiv.org/abs/2607.02512)
   url = {https://arxiv.org/abs/2609.04199}
 }
 ```
-
-## License
-
-MIT - see [LICENSE](LICENSE).
