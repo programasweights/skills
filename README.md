@@ -82,7 +82,7 @@ Copy `skills/programasweights/` into your agent's skills directory, e.g.:
 
 If you use this skill in research, cite Program-as-Weights for the underlying programming paradigm. Also cite Compile by Training when using the training compiler.
 
-**[Program-as-Weights: A Programming Paradigm for Fuzzy Functions](https://openreview.net/forum?id=ppCD0mb6ty)**
+**[Program-as-Weights: A Programming Paradigm for Fuzzy Functions](https://arxiv.org/abs/2607.02512)**
 
 NeurIPS 2026 · [Preprint](https://arxiv.org/abs/2607.02512)
 
@@ -92,7 +92,7 @@ NeurIPS 2026 · [Preprint](https://arxiv.org/abs/2607.02512)
   author = {Zhang, Wentao and Hotsko, Liliana and Kim, Woojeong and Nie, Pengyu and Shieber, Stuart and Deng, Yuntian},
   booktitle = {The Fortieth Annual Conference on Neural Information Processing Systems},
   year = {2026},
-  url = {https://openreview.net/forum?id=ppCD0mb6ty}
+  url = {https://arxiv.org/abs/2607.02512}
 }
 ```
 
